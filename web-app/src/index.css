@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --color-surface-950: #0a0f12;
+  --color-surface-900: #111a1f;
+  --color-surface-800: #1a262e;
+  --color-surface-700: #24323c;
+  --color-brand: #2dd4bf;
+  --color-brand-dim: #115e59;
+  --color-accent: #f59e0b;
+  --color-muted: #94a3b8;
+}
+
+html {
+  @apply antialiased;
+}
+
+body {
+  @apply m-0 min-h-svh bg-surface-950 font-sans text-slate-100;
+}
+
+#root {
+  @apply min-h-svh;
+}
