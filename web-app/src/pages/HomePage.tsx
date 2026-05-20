@@ -6,7 +6,7 @@ import { isGeminiConfigured, rankMeetupsWithGemini } from '../services/gemini'
 import { subscribeActiveMeetups } from '../services/meetups'
 import type { Meetup } from '../types/models'
 import { haversineKm } from '../utils/geo'
-import { compareByStatusThen } from '../utils/meetupStatus'
+import { compareByStatusThen, getMeetupStatus } from '../utils/meetupStatus'
 
 function matchesQuery(m: Meetup, q: string): boolean {
   if (!q) {
@@ -47,8 +47,9 @@ export function HomePage() {
   const radiusKm = profile?.radiusKm ?? 5
 
   const nearby = useMemo(() => {
+    const activeOnly = meetups.filter((m) => getMeetupStatus(m) !== 'ended')
     const base = center
-      ? [...meetups]
+      ? activeOnly
           .map((m) => ({
             m,
             d: haversineKm(center, { lat: m.place.lat, lng: m.place.lng }),
@@ -56,7 +57,7 @@ export function HomePage() {
           .filter((x) => x.d <= radiusKm)
           .sort(compareByStatusThen((x) => x.m, (a, b) => a.d - b.d))
           .map((x) => x.m)
-      : [...meetups].sort(
+      : [...activeOnly].sort(
           compareByStatusThen(
             (m) => m,
             (a, b) => a.time.start.getTime() - b.time.start.getTime(),
