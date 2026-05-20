@@ -18,6 +18,7 @@ export function CreateMeetupPage() {
   const [end, setEnd] = useState('')
   const [maxParticipants, setMaxParticipants] = useState(10)
   const [locationSharingEnabled, setLocationSharingEnabled] = useState(true)
+  const [ticketingEnabled, setTicketingEnabled] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -25,7 +26,7 @@ export function CreateMeetupPage() {
     return null
   }
 
-  function useMyLocation() {
+  function fillFromDeviceLocation() {
     if (!navigator.geolocation) {
       setError('Geolocation not available.')
       return
@@ -44,6 +45,10 @@ export function CreateMeetupPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
+    if (!user) {
+      setError('You must be signed in.')
+      return
+    }
     const latN = Number(lat)
     const lngN = Number(lng)
     if (!Number.isFinite(latN) || !Number.isFinite(lngN)) {
@@ -76,6 +81,7 @@ export function CreateMeetupPage() {
         time: { start: startDate, end: endDate },
         maxParticipants,
         locationSharingEnabled,
+        ticketingEnabled,
       })
       navigate(`/meetups/${id}`, { replace: true })
     } catch (err) {
@@ -167,7 +173,7 @@ export function CreateMeetupPage() {
           </div>
           <button
             type="button"
-            onClick={() => useMyLocation()}
+            onClick={() => fillFromDeviceLocation()}
             className="mt-3 rounded-xl border border-surface-600 px-3 py-2 text-sm text-slate-200 hover:bg-surface-700"
           >
             Use current location for coordinates
@@ -224,6 +230,23 @@ export function CreateMeetupPage() {
           />
           <span className="text-sm text-slate-200">
             Allow optional live location during the event (participants opt in).
+          </span>
+        </label>
+
+        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-surface-700 bg-surface-900/60 px-3 py-3">
+          <input
+            type="checkbox"
+            checked={ticketingEnabled}
+            onChange={(e) => setTicketingEnabled(e.target.checked)}
+            className="mt-0.5 size-4 accent-brand"
+          />
+          <span className="text-sm text-slate-200">
+            <span className="font-medium">Issue tickets for check-in.</span>
+            <span className="mt-0.5 block text-xs text-muted">
+              Each participant gets a unique code/QR; you can scan them at the
+              door. Turn off for casual gatherings (hangouts, study sessions)
+              where headcount is enough.
+            </span>
           </span>
         </label>
 

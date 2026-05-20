@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   type User,
@@ -27,6 +28,7 @@ type AuthState = {
   signUpEmail: (name: string, email: string, password: string) => Promise<void>
   signOutUser: () => Promise<void>
   refreshProfile: () => Promise<void>
+  sendPasswordReset: (email: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthState | null>(null)
@@ -78,14 +80,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false)
       return
     }
-    const unsub = onAuthStateChanged(auth, async (u) => {
+    const a = auth
+    const d = db
+    const unsub = onAuthStateChanged(a, async (u) => {
       setUser(u)
       if (!u) {
         setProfile(null)
         setLoading(false)
         return
       }
-      const ref = doc(db, 'users', u.uid)
+      const ref = doc(d, 'users', u.uid)
       const snap = await getDoc(ref)
       if (!snap.exists()) {
         setProfile(null)
@@ -136,6 +140,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signOut(auth)
   }, [])
 
+  const sendPasswordReset = useCallback(async (email: string) => {
+    if (!auth) {
+      throw new Error('Firebase Auth is not configured.')
+    }
+    const trimmed = email.trim()
+    if (!trimmed) {
+      throw new Error('Please enter your email.')
+    }
+    await sendPasswordResetEmail(auth, trimmed)
+  }, [])
+
   const value = useMemo<AuthState>(
     () => ({
       firebaseReady: isFirebaseConfigured() && Boolean(auth && db),
@@ -146,6 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signUpEmail,
       signOutUser,
       refreshProfile,
+      sendPasswordReset,
     }),
     [
       user,
@@ -155,6 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signUpEmail,
       signOutUser,
       refreshProfile,
+      sendPasswordReset,
     ],
   )
 

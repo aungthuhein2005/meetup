@@ -17,6 +17,32 @@ function getModel() {
   return gen.getGenerativeModel({ model: modelId })
 }
 
+function isRetryableGeminiError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err)
+  return /\b(503|429|500|502|504)\b/.test(msg) ||
+    /high demand|overloaded|unavailable|try again/i.test(msg)
+}
+
+async function generateWithRetry(
+  model: ReturnType<typeof getModel>,
+  prompt: string,
+  maxAttempts = 4,
+): Promise<Awaited<ReturnType<typeof model.generateContent>>> {
+  let lastError: unknown
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      return await model.generateContent(prompt)
+    } catch (err) {
+      lastError = err
+      if (!isRetryableGeminiError(err) || attempt === maxAttempts - 1) {
+        throw err
+      }
+      await new Promise((r) => setTimeout(r, 1000 * 2 ** attempt))
+    }
+  }
+  throw lastError
+}
+
 export async function rankMeetupsWithGemini(input: {
   userInterests: string[]
   userLocationLabel: string
@@ -44,7 +70,7 @@ ${payload}
 
 Return ONLY a JSON array of meetup "id" strings, best match first. No markdown, no explanation. Max 8 ids. If none fit, return [].`
 
-  const res = await model.generateContent(prompt)
+  const res = await generateWithRetry(model, prompt)
   const text = res.response.text().trim()
   const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '')
   try {
@@ -77,6 +103,6 @@ ${transcript}
 
 Reply as the assistant to the latest user message. Be brief, actionable, and mention specific meetup titles when helpful.`
 
-  const res = await model.generateContent(prompt)
+  const res = await generateWithRetry(model, prompt)
   return res.response.text().trim()
 }

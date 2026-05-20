@@ -78,7 +78,7 @@ export function AssistantPage() {
   }
 
   return (
-    <div className="flex min-h-[70vh] flex-col pb-24">
+    <div className="mx-auto flex w-full max-w-2xl flex-col px-4 py-6 pb-24" style={{ minHeight: '70vh' }}>
       <h1 className="font-display text-2xl font-semibold text-slate-100">
         MeetToTalk assistant
       </h1>

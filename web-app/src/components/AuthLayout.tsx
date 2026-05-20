@@ -19,7 +19,7 @@ export function SetupGate() {
 }
 
 export function AuthLayout() {
-  const { firebaseReady, user, profile, loading } = useAuth()
+  const { firebaseReady, user, loading } = useAuth()
   const location = useLocation()
 
   if (!isFirebaseConfigured()) {

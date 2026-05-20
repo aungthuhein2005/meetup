@@ -24,7 +24,7 @@ export function OnboardingPage() {
   }
 
   if (profile?.onboardingComplete) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/home" replace />
   }
 
   function captureLocation() {
@@ -50,6 +50,9 @@ export function OnboardingPage() {
     setError(null)
     setBusy(true)
     try {
+      if (!user) {
+        throw new Error('You must be signed in.')
+      }
       const interests = parseInterestInput(interestsRaw)
       await saveUserOnboarding(user.uid, {
         name: name.trim() || 'Member',
@@ -58,7 +61,7 @@ export function OnboardingPage() {
         radiusKm,
       })
       await refreshProfile()
-      navigate('/', { replace: true })
+      navigate('/home', { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not save profile.')
     } finally {

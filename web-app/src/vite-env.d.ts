@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly VITE_GEMINI_API_KEY: string | undefined
   readonly VITE_GEMINI_MODEL: string | undefined
   readonly VITE_GOOGLE_MAPS_API_KEY: string | undefined
+  readonly VITE_APP_URL: string | undefined
 }
 
 interface ImportMeta {

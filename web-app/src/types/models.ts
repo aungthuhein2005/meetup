@@ -26,6 +26,7 @@ export type Meetup = {
   participants: string[]
   participantCount: number
   locationSharingEnabled: boolean
+  ticketingEnabled: boolean
   status: 'active' | 'cancelled' | 'completed'
   createdAt: Date
   imageUrl?: string
@@ -36,4 +37,13 @@ export type LiveLocation = {
   lat: number
   lng: number
   updatedAt: Date
+}
+
+export type ParticipantPass = {
+  userId: string
+  code: string
+  joinedAt: Date
+  checkedIn: boolean
+  checkedInAt: Date | null
+  checkedInBy: string | null
 }

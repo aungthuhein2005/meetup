@@ -22,7 +22,7 @@ cd web-app
 cp .env.example .env
 ```
 
-Edit `.env` with your Firebase web app keys from [Firebase Console](https://console.firebase.google.com/) → Project settings. Optionally set `VITE_GEMINI_API_KEY` and `VITE_GOOGLE_MAPS_API_KEY` (static map previews on meetup detail).
+Edit `.env` with your Firebase web app keys from [Firebase Console](https://console.firebase.google.com/) → Project settings. Optionally set `VITE_GEMINI_API_KEY` and `VITE_GOOGLE_MAPS_API_KEY` (interactive map on meetup detail; enable **Maps JavaScript API** in Google Cloud). For on-stage QR demos, set `VITE_APP_URL` to your machine’s LAN URL (e.g. `http://192.168.1.10:5173`) so phones on the same Wi‑Fi open the correct meetup link.
 
 ```bash
 npm install

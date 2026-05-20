@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { HeaderSearch } from './HeaderSearch'
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   [
@@ -12,19 +13,20 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-svh flex-col">
-      <header className="sticky top-0 z-10 border-b border-surface-700 bg-surface-900/95 backdrop-blur">
-        <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
+      <header className="sticky top-0 z-40 border-b border-surface-700 bg-surface-900/95 shadow-[0_2px_12px_rgba(0,0,0,0.25)] backdrop-blur supports-backdrop-filter:bg-surface-900/80">
+        <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
           <NavLink
-            to="/"
-            className="font-display text-lg font-semibold tracking-tight text-brand"
+            to="/home"
+            className="shrink-0 font-display text-lg font-semibold tracking-tight text-brand"
           >
             MeetToTalk
           </NavLink>
+          {profile?.onboardingComplete ? <HeaderSearch /> : <div className="flex-1" />}
           {profile ? (
             <button
               type="button"
               onClick={() => void signOutUser()}
-              className="text-sm text-muted hover:text-slate-200"
+              className="shrink-0 text-sm text-muted hover:text-slate-200"
             >
               Sign out
             </button>
@@ -37,10 +39,13 @@ export function AppShell() {
       </main>
 
       {profile?.onboardingComplete ? (
-        <nav className="sticky bottom-0 border-t border-surface-700 bg-surface-900/95 backdrop-blur">
+        <nav className="sticky bottom-0 z-30 border-t border-surface-700 bg-surface-900/95 backdrop-blur supports-backdrop-filter:bg-surface-900/80">
           <div className="mx-auto flex max-w-2xl justify-around px-2 py-2">
-            <NavLink to="/" className={linkClass} end>
+            <NavLink to="/home" className={linkClass} end>
               Nearby
+            </NavLink>
+            <NavLink to="/me" className={linkClass}>
+              My
             </NavLink>
             <NavLink to="/meetups/new" className={linkClass}>
               Create

@@ -7,10 +7,12 @@ export function LoginPage() {
   const { firebaseReady, user, profile, loading, signInEmail, signUpEmail } =
     useAuth()
   const location = useLocation()
-  const from = (location.state as { from?: { pathname?: string } } | null)
-    ?.from?.pathname
+  const navState = (location.state ?? null) as
+    | { from?: { pathname?: string }; mode?: 'in' | 'up' }
+    | null
+  const from = navState?.from?.pathname
 
-  const [mode, setMode] = useState<'in' | 'up'>('in')
+  const [mode, setMode] = useState<'in' | 'up'>(navState?.mode ?? 'in')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -23,7 +25,9 @@ export function LoginPage() {
 
   if (!loading && user) {
     if (profile?.onboardingComplete) {
-      return <Navigate to={from && from !== '/login' ? from : '/'} replace />
+      return (
+        <Navigate to={from && from !== '/login' ? from : '/home'} replace />
+      )
     }
     return <Navigate to="/onboarding" replace />
   }
@@ -108,9 +112,20 @@ export function LoginPage() {
           />
         </label>
         <label className="block">
-          <span className="text-xs font-medium uppercase tracking-wide text-muted">
-            Password
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium uppercase tracking-wide text-muted">
+              Password
+            </span>
+            {mode === 'in' ? (
+              <Link
+                to="/forgot-password"
+                state={{ email }}
+                className="text-xs text-brand hover:underline"
+              >
+                Forgot password?
+              </Link>
+            ) : null}
+          </div>
           <input
             type="password"
             required
@@ -141,7 +156,7 @@ export function LoginPage() {
       </p>
       <p className="mt-4 text-center text-sm text-muted">
         <Link to="/" className="text-brand hover:underline">
-          Back to app
+          Back to home
         </Link>
       </p>
     </div>

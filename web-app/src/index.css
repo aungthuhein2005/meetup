@@ -24,3 +24,57 @@ body {
 #root {
   @apply min-h-svh;
 }
+
+@keyframes blob-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(8%, -6%, 0) scale(1.08); }
+  66%      { transform: translate3d(-6%, 4%, 0) scale(0.95); }
+}
+
+@keyframes blob-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-10%, 8%, 0) scale(1.12); }
+}
+
+@keyframes blob-drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(6%, -10%, 0) scale(0.9); }
+}
+
+@keyframes grid-pan {
+  0%   { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+
+@keyframes spark-twinkle {
+  0%, 100% { opacity: 0.15; }
+  50%      { opacity: 0.55; }
+}
+
+.hero-anim-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(72px);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.hero-anim-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(45, 212, 191, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(45, 212, 191, 0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+  animation: grid-pan 18s linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-anim-blob,
+  .hero-anim-grid,
+  .hero-anim-spark {
+    animation: none !important;
+  }
+}
