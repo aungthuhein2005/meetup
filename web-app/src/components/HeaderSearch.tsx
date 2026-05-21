@@ -61,7 +61,9 @@ export function HeaderSearch() {
         🔍
       </span>
       <input
-        type="search"
+        type="text"
+        inputMode="search"
+        enterKeyHint="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Search meetups…"
