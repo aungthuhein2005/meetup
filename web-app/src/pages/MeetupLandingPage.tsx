@@ -1,6 +1,11 @@
 import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import { MeetupPlaceMap } from '../components/MeetupPlaceMap'
 import { useAuth } from '../context/AuthContext'
 import { getMeetup, joinMeetup, subscribeMeetup } from '../services/meetups'
@@ -10,11 +15,26 @@ export function MeetupLandingPage() {
   const { id } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const previewMode = searchParams.get('preview') === '1'
   const { user, profile } = useAuth()
   const [meetup, setMeetup] = useState<Meetup | null | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [slowLoad, setSlowLoad] = useState(false)
+
+  useEffect(() => {
+    if (previewMode) {
+      return
+    }
+    if (!id || !user || !profile?.onboardingComplete) {
+      return
+    }
+    if (!meetup) {
+      return
+    }
+    navigate(`/meetups/${id}`, { replace: true })
+  }, [id, user, profile?.onboardingComplete, meetup, navigate, previewMode])
 
   useEffect(() => {
     if (!id) {
@@ -149,6 +169,20 @@ export function MeetupLandingPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 px-4 pb-24 pt-6">
+      {previewMode && user ? (
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
+          <span>
+            Public preview mode — this is what guests see when they scan your QR.
+          </span>
+          <button
+            type="button"
+            onClick={() => navigate(`/meetups/${id}`, { replace: true })}
+            className="rounded-md border border-amber-500/40 px-2 py-1 text-[11px] font-medium text-amber-100 hover:bg-amber-500/10"
+          >
+            Exit preview
+          </button>
+        </div>
+      ) : null}
       <div>
         <p className="text-xs font-medium uppercase tracking-wide text-brand">
           Public meetup link
