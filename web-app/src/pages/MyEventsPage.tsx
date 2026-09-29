@@ -95,16 +95,22 @@ export function MyEventsPage() {
   }, [nextUp, now])
 
   return (
-    <div className="space-y-6 pb-24">
-      <header>
-        <h1 className="font-display text-2xl font-semibold text-slate-100">
-          My events
-        </h1>
-        <p className="mt-1 text-sm text-muted">
+    <div className="space-y-8 pb-24 lg:pb-8">
+      <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand/70">Your calendar</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">My events</h1>
+        <p className="mt-2 text-sm text-slate-500">
           {profile?.name ? `Hi ${profile.name.split(' ')[0]} — ` : ''}your
           upcoming and past meetups.
         </p>
+        </div>
+        <Link to="/meetups/new" className="inline-flex w-fit items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-surface-950 transition hover:bg-teal-300"><span className="text-lg leading-none">+</span>Create event</Link>
       </header>
+
+      <section className="grid grid-cols-3 gap-3">
+        {[{ label: 'Hosting', value: hosting.length }, { label: 'Joined', value: joinedUpcoming.length }, { label: 'Past', value: joinedPast.length }].map((item) => <div key={item.label} className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4"><p className="text-xs text-slate-500">{item.label}</p><p className="mt-2 text-2xl font-semibold text-slate-100">{item.value}</p></div>)}
+      </section>
 
       {loadError ? (
         <p className="rounded-xl border border-red-900/50 bg-red-950/30 p-3 text-sm text-red-300">
@@ -115,7 +121,7 @@ export function MyEventsPage() {
       {nextUp && nextStatus ? (
         <Link
           to={`/meetups/${nextUp.id}`}
-          className="block rounded-3xl border border-brand/40 bg-linear-to-br from-brand/15 to-surface-900/40 p-5 transition hover:border-brand/60"
+          className="block overflow-hidden rounded-3xl border border-brand/25 bg-linear-to-br from-brand/[0.12] via-surface-900/70 to-surface-900 p-6 shadow-[0_16px_50px_rgba(0,0,0,0.16)] transition hover:border-brand/45"
         >
           <div className="flex items-center justify-between gap-3">
             <span
@@ -129,7 +135,7 @@ export function MyEventsPage() {
             </span>
             <span className="text-xs text-muted">Next up</span>
           </div>
-          <h2 className="mt-3 font-display text-xl font-semibold leading-tight text-slate-100">
+          <h2 className="mt-4 text-xl font-semibold leading-tight text-slate-100 sm:text-2xl">
             {nextUp.title}
           </h2>
           <p className="mt-1 text-sm text-slate-300">
@@ -149,7 +155,7 @@ export function MyEventsPage() {
       <Section
         title="Joined"
         emptyText="No upcoming events you’ve joined."
-        ctaTo="/"
+        ctaTo="/home"
         ctaLabel="Discover meetups"
         meetups={joinedUpcoming}
       />
@@ -179,13 +185,13 @@ function Section({
   muted,
 }: SectionProps) {
   return (
-    <section className="space-y-3">
+    <section className="space-y-4">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="font-display text-lg text-slate-100">{title}</h2>
-        <span className="text-xs text-muted">{meetups.length}</span>
+        <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
+        <span className="rounded-full bg-white/[0.04] px-2.5 py-1 text-xs text-slate-500">{meetups.length}</span>
       </div>
       {meetups.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-surface-600 p-6 text-center">
+        <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.015] p-8 text-center">
           <p className="text-sm text-muted">{emptyText}</p>
           {ctaTo && ctaLabel ? (
             <Link
@@ -197,7 +203,7 @@ function Section({
           ) : null}
         </div>
       ) : (
-        <ul className={`space-y-3 ${muted ? 'opacity-80' : ''}`}>
+        <ul className={`grid gap-4 md:grid-cols-2 xl:grid-cols-3 ${muted ? 'opacity-80' : ''}`}>
           {meetups.map((m) => (
             <li key={m.id}>
               <MeetupCard meetup={m} />

@@ -19,6 +19,18 @@ html {
 
 body {
   @apply m-0 min-h-svh bg-surface-950 font-sans text-slate-100;
+  background-image:
+    radial-gradient(circle at 82% 5%, rgba(45, 212, 191, 0.055), transparent 24rem),
+    radial-gradient(circle at 18% 72%, rgba(14, 116, 144, 0.035), transparent 30rem);
+}
+
+::selection {
+  background: rgba(45, 212, 191, 0.24);
+  color: #f8fafc;
+}
+
+button, a, input, textarea, select {
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root {

@@ -52,7 +52,7 @@ export function HeaderSearch() {
     <form
       onSubmit={onSubmit}
       role="search"
-      className="relative flex-1 max-w-md"
+      className="relative flex-1 max-w-xl"
     >
       <span
         aria-hidden
@@ -68,7 +68,7 @@ export function HeaderSearch() {
         onChange={(e) => setValue(e.target.value)}
         placeholder="Search meetups…"
         aria-label="Search meetups"
-        className="w-full rounded-xl border border-surface-700 bg-surface-900 py-1.5 pl-9 pr-8 text-sm text-slate-100 outline-none ring-brand/30 placeholder:text-muted focus:ring-2"
+        className="w-full rounded-xl border border-white/[0.07] bg-white/[0.035] py-2 pl-9 pr-8 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-brand/30 focus:bg-surface-900 focus:ring-2 focus:ring-brand/10"
       />
       {value ? (
         <button

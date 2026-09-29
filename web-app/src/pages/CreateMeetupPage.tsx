@@ -92,15 +92,14 @@ export function CreateMeetupPage() {
   }
 
   return (
-    <div className="pb-24">
-      <h1 className="font-display text-2xl font-semibold text-slate-100">
-        Create meetup
-      </h1>
-      <p className="mt-1 text-sm text-muted">
-        Title, time, and place are shared with participants. Live location is optional per PRD.
+    <div className="mx-auto w-full max-w-3xl pb-24 lg:pb-8">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand/70">Event builder</p>
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Create an event</h1>
+      <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+        Bring people together. Add the essentials now—you can share the event as soon as it is published.
       </p>
 
-      <form onSubmit={(e) => void onSubmit(e)} className="mt-8 space-y-5">
+      <form onSubmit={(e) => void onSubmit(e)} className="mt-8 space-y-5 rounded-3xl border border-white/[0.07] bg-surface-900/55 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.14)] sm:p-7">
         <label className="block">
           <span className="text-xs font-medium uppercase tracking-wide text-muted">
             Title
