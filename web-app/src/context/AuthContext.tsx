@@ -89,14 +89,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false)
         return
       }
-      const ref = doc(d, 'users', u.uid)
-      const snap = await getDoc(ref)
-      if (!snap.exists()) {
+      try {
+        const ref = doc(d, 'users', u.uid)
+        const snap = await getDoc(ref)
+        if (!snap.exists()) {
+          setProfile(null)
+        } else {
+          setProfile(mapProfile(u.uid, snap.data() as Record<string, unknown>))
+        }
+      } catch {
+        // Authentication can succeed while Firestore is temporarily unavailable
+        // or its rules are still being deployed. Never leave the whole app stuck
+        // on the loading screen in that case.
         setProfile(null)
-      } else {
-        setProfile(mapProfile(u.uid, snap.data() as Record<string, unknown>))
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     })
     return () => unsub()
   }, [])

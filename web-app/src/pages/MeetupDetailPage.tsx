@@ -16,6 +16,7 @@ import {
   subscribeMyPass,
 } from '../services/meetups'
 import type { Meetup, ParticipantPass } from '../types/models'
+import { getMeetupStatus } from '../utils/meetupStatus'
 
 export function MeetupDetailPage() {
   const { id } = useParams()
@@ -222,6 +223,15 @@ export function MeetupDetailPage() {
         : capacityPct >= 50
           ? 'Filling up'
           : 'Open spots'
+  const scheduleStatus = getMeetupStatus(meetup)
+  const statusLabel =
+    meetup.status === 'active'
+      ? scheduleStatus === 'live'
+        ? 'Live now'
+        : scheduleStatus === 'upcoming'
+          ? 'Upcoming'
+          : 'Ended'
+      : meetup.status
 
   return (
     <div className="space-y-5 pb-24">
@@ -229,7 +239,7 @@ export function MeetupDetailPage() {
       <header className="rounded-3xl border border-surface-700 bg-linear-to-br from-surface-900/80 to-surface-800/40 p-5">
         <div className="flex items-start justify-between gap-3">
           <span className="inline-flex items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand">
-            {meetup.status === 'active' ? 'Live event' : meetup.status}
+            {statusLabel}
           </span>
           <span className="text-xs text-muted">{fullness}</span>
         </div>

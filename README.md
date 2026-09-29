@@ -98,9 +98,9 @@ After signing in and completing onboarding, visit `http://localhost:5173/dev/see
 
 1. **Authentication** — Enable **Email/Password** under Authentication → Sign-in method. If you see `auth/configuration-not-found`, this step was missed.
 2. **Firestore** — Create a database (production mode recommended). Paste rules from `web-app/firebase/firestore.rules` into Firestore → Rules and publish. The rules cover:
-  - `meetups/{id}` — public read (so `/m/:id` works without auth), authed writes.
+  - `meetups/{id}` — public read (so `/m/:id` works without auth); organizers can edit their events, while participants can only join or leave.
   - `meetups/{id}/participants/{uid}` — per-participant tickets; participant can create / delete their own pass, organizer can read all and flip check-in.
-  - `meetups/{id}/live/{uid}` — opt-in live location during the event window.
+  - `meetups/{id}/liveLocations/{uid}` — opt-in live location, readable only by participants and the organizer.
 3. **Project link** — Run `firebase login`, `cd web-app`, `firebase use --add` (alias `default` is fine), then:
   ```bash
    firebase deploy --only firestore
