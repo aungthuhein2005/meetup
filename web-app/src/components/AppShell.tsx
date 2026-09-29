@@ -20,6 +20,21 @@ function Icon({ name }: { name: (typeof navItems)[number]['icon'] | 'logout' }) 
   return <svg aria-hidden viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>
 }
 
+function BrandMark({ compact = false }: { compact?: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className={`relative block shrink-0 overflow-hidden rounded-xl bg-brand/10 ring-1 ring-brand/15 ${compact ? 'size-8' : 'size-9'}`}
+    >
+      <img
+        src="/logo2.png"
+        alt=""
+        className={`pointer-events-none absolute max-w-none ${compact ? '-left-[31px] -top-[27px] w-[90px]' : '-left-[34px] -top-[31px] w-[104px]'}`}
+      />
+    </span>
+  )
+}
+
 const desktopLinkClass = ({ isActive }: { isActive: boolean }) =>
   `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${isActive ? 'bg-brand/[0.12] text-brand ring-1 ring-inset ring-brand/15' : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100'}`
 
@@ -37,7 +52,7 @@ export function AppShell() {
       {profile?.onboardingComplete ? (
         <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-white/[0.06] bg-surface-900/70 px-4 py-5 backdrop-blur-xl lg:flex">
           <NavLink to="/home" className="flex items-center gap-3 px-2">
-            <span className="grid size-9 place-items-center rounded-xl bg-brand text-sm font-black text-surface-950 shadow-[0_0_24px_rgba(45,212,191,0.22)]">M</span>
+            <BrandMark />
             <div><p className="text-[15px] font-semibold tracking-tight text-white">MeetToTalk</p><p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">Community OS</p></div>
           </NavLink>
           <nav className="mt-9 space-y-1" aria-label="Primary navigation">
@@ -54,7 +69,7 @@ export function AppShell() {
       <div className={`flex min-h-svh min-w-0 flex-1 flex-col ${profile?.onboardingComplete ? 'lg:pl-64' : ''}`}>
         <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-surface-950/85 backdrop-blur-xl">
           <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
-            <NavLink to="/home" className="flex shrink-0 items-center gap-2 lg:hidden"><span className="grid size-8 place-items-center rounded-lg bg-brand text-xs font-black text-surface-950">M</span><span className="hidden text-sm font-semibold text-white sm:block">MeetToTalk</span></NavLink>
+            <NavLink to="/home" className="flex shrink-0 items-center gap-2 lg:hidden"><BrandMark compact /><span className="hidden text-sm font-semibold text-white sm:block">MeetToTalk</span></NavLink>
             {profile?.onboardingComplete ? <HeaderSearch /> : <div className="flex-1" />}
             {profile?.onboardingComplete ? <NavLink to="/meetups/new" className="hidden shrink-0 items-center gap-2 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-surface-950 shadow-[0_8px_24px_rgba(45,212,191,0.14)] transition hover:bg-teal-300 sm:flex lg:hidden"><span className="text-lg leading-none">+</span> New event</NavLink> : null}
             {profile ? <span className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-800 text-xs font-bold text-brand ring-1 ring-white/10 lg:hidden">{initials}</span> : null}
